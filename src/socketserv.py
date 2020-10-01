@@ -13,6 +13,7 @@ class SocketServer:
         self.sock.bind((self.host, self.port))
         self.sock.listen(1)
         self.mqttclient = AwsMqtt(endpointurl, endpointport)
+        self.count = 0
 
     def runserver(self):
         print('waiting for a connection')
@@ -24,9 +25,11 @@ class SocketServer:
                 if data:
                     data = str(data).split(',')
                     if data[0] == "b'+RESP:GTSOS":
-                        print(data)
+                        self.count += 1
+                        payload = {"count":self.count, "mensaje": "MSJ#"+str(self.count)+": Papi te amo", "url": "Estoy aqui: "+"https://www.google.com/maps/search/?api=1&query="+data[12]+","+data[11]}
                         self.mqttclient.subscribe(topic="sos")
-                        self.mqttclient.publish(topic="sos", payload=data)
+                        self.mqttclient.publish(topic="sos", payload=payload)
+                        print(data)
                     # connection.sendall(data)
                 else:
                     break

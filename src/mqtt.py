@@ -35,4 +35,4 @@ class AwsMqtt():
         self.client.subscribe(topic,1,_subscrib)
 
     def publish(self,topic:str,payload:dict):
-        self.client.publish(topic,json.dumps(payload),0)
+        self.client.publish(topic,json.dumps(payload),1)
